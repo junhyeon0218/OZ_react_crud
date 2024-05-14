@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
+import Alert from "./components/Alert";
 
 const App = () => {
   const initialExpenses = [
@@ -15,6 +16,14 @@ const App = () => {
   const [expenses, setExpenses] = useState(initialExpenses);
   const [amount, setAmount] = useState(0);
   const [charge, setCharge] = useState("");
+  const [alert, setAlert] = useState({ show: false });
+
+  const showAlert = ({ type, text }) => {
+    setAlert({ show: true, type, text });
+    setTimeout(() => {
+      setAlert({ show: false });
+    }, 2000);
+  };
 
   const handleDelete = (id) => {
     const newExpenses = expenses.filter((expense) => expense.id !== id);
@@ -39,8 +48,9 @@ const App = () => {
       setExpenses(newExpenses);
       setCharge("");
       setAmount(0);
+      showAlert({ type: "success", text: "추가되었습니다" });
     } else {
-      alert("상품과 비용을 입력해주세요");
+      showAlert({ type: "danger", text: "상품과 비용을 입력해주세요" });
     }
   };
 
@@ -50,6 +60,7 @@ const App = () => {
 
   return (
     <main className='mainContainer'>
+      {alert.show ? <Alert type={alert.type} text={alert.text} /> : null}
       <div className='subContainer'>
         <h1>장바구니</h1>
         <div
