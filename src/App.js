@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
@@ -12,6 +12,42 @@ const App = () => {
     { id: 5, name: "음료수", amount: 500 },
   ];
 
+  const [expenses, setExpenses] = useState(initialExpenses);
+  const [amount, setAmount] = useState(0);
+  const [charge, setCharge] = useState("");
+
+  const handleDelete = (id) => {
+    const newExpenses = expenses.filter((expense) => expense.id !== id);
+    setExpenses(newExpenses);
+  };
+
+  const handleCharge = (e) => {
+    setCharge(e.target.value);
+  };
+
+  const handleAmount = (e) => {
+    setAmount(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (charge !== "" && amount > 0) {
+      const newExpenses = [
+        ...expenses,
+        { id: Date.now(), name: charge, amount },
+      ];
+      setExpenses(newExpenses);
+      setCharge("");
+      setAmount(0);
+    } else {
+      alert("상품과 비용을 입력해주세요");
+    }
+  };
+
+  const handleDeleteAll = () => {
+    setExpenses([]);
+  };
+
   return (
     <main className='mainContainer'>
       <div className='subContainer'>
@@ -20,13 +56,23 @@ const App = () => {
           className='cart'
           style={{ width: "100%", backgroundColor: "white", padding: "1rem" }}
         >
-          <ExpenseForm />
+          <ExpenseForm
+            amount={amount}
+            handleAmount={handleAmount}
+            charge={charge}
+            handleCharge={handleCharge}
+            handleSubmit={handleSubmit}
+          />
         </div>
         <div
           className='cart'
           style={{ width: "100%", backgroundColor: "white", padding: "1rem" }}
         >
-          <ExpenseList initialExpenses={initialExpenses} />
+          <ExpenseList
+            expenses={expenses}
+            handleDelete={handleDelete}
+            handleDeleteAll={handleDeleteAll}
+          />
         </div>
         <div
           style={{

@@ -2,19 +2,24 @@ import React from "react";
 import "../styles/ExpenseList.css";
 import ExpenseItem from "./ExpenseItem";
 
-const ExpenseList = (props) => {
-  console.log(props); // initialExpenses 배열 그 자체를 객체로 가져옴
-  console.log(props.initialExpenses); // initialExpenses 배열을 가져옴
-  console.log(props.initialExpenses[0]);
+const ExpenseList = ({ expenses, handleDelete, handleDeleteAll }) => {
   return (
     <>
       <ul className='list'>
-        {props.initialExpenses.map((expense) => {
-          return <ExpenseItem key={expense.id} expense={expense} />;
+        {expenses.map((expense) => {
+          return (
+            <ExpenseItem
+              key={expense.id}
+              expense={expense}
+              handleDelete={handleDelete}
+            />
+          );
         })}
       </ul>
 
-      <button className='btn'>지우기</button>
+      <button className='btn' onClick={handleDeleteAll}>
+        지우기
+      </button>
     </>
   );
 };
