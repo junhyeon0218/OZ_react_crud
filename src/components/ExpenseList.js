@@ -2,7 +2,12 @@ import React from "react";
 import "../styles/ExpenseList.css";
 import ExpenseItem from "./ExpenseItem";
 
-const ExpenseList = ({ expenses, handleDelete, handleDeleteAll }) => {
+const ExpenseList = ({
+  expenses,
+  handleDelete,
+  handleDeleteAll,
+  handleEdit,
+}) => {
   return (
     <>
       <ul className='list'>
@@ -12,6 +17,7 @@ const ExpenseList = ({ expenses, handleDelete, handleDeleteAll }) => {
               key={expense.id}
               expense={expense}
               handleDelete={handleDelete}
+              handleEdit={handleEdit}
             />
           );
         })}

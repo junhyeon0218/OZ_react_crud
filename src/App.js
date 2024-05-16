@@ -4,19 +4,21 @@ import ExpenseForm from "./components/ExpenseForm";
 import ExpenseList from "./components/ExpenseList";
 import Alert from "./components/Alert";
 
-const App = () => {
-  const initialExpenses = [
-    { id: 1, name: "빵", amount: 100 },
-    { id: 2, name: "아이스크림", amount: 200 },
-    { id: 3, name: "커피", amount: 300 },
-    { id: 4, name: "과자", amount: 400 },
-    { id: 5, name: "음료수", amount: 500 },
-  ];
+const initialExpenses = [
+  { id: 1, charge: "빵", amount: 100 },
+  { id: 2, charge: "아이스크림", amount: 200 },
+  { id: 3, charge: "커피", amount: 300 },
+  { id: 4, charge: "과자", amount: 400 },
+  { id: 5, charge: "음료수", amount: 500 },
+];
 
+const App = () => {
   const [expenses, setExpenses] = useState(initialExpenses);
   const [amount, setAmount] = useState(0);
   const [charge, setCharge] = useState("");
   const [alert, setAlert] = useState({ show: false });
+  const [edit, setEdit] = useState(false);
+  const [id, setId] = useState("");
 
   const showAlert = ({ type, text }) => {
     setAlert({ show: true, type, text });
@@ -41,14 +43,24 @@ const App = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (charge !== "" && amount > 0) {
-      const newExpenses = [
-        ...expenses,
-        { id: Date.now(), name: charge, amount },
-      ];
-      setExpenses(newExpenses);
+      if (edit) {
+        const newExpenses = expenses.map((item) => {
+          return item.id === id ? { ...item, charge, amount } : item;
+        });
+        setExpenses(newExpenses);
+        showAlert({ type: "success", text: "수정되었습니다" });
+        setEdit(false);
+      } else {
+        const newExpenses = [
+          ...expenses,
+          { id: Date.now(), charge: charge, amount },
+        ];
+        setExpenses(newExpenses);
+        showAlert({ type: "success", text: "추가되었습니다" });
+      }
+
       setCharge("");
       setAmount(0);
-      showAlert({ type: "success", text: "추가되었습니다" });
     } else {
       showAlert({ type: "danger", text: "상품과 비용을 입력해주세요" });
     }
@@ -56,6 +68,15 @@ const App = () => {
 
   const handleDeleteAll = () => {
     setExpenses([]);
+  };
+
+  const handleEdit = (id) => {
+    const expense = expenses.find((expense) => expense.id === id);
+    const { charge, amount } = expense;
+    setCharge(charge);
+    setAmount(amount);
+    setEdit(true);
+    setId(id);
   };
 
   return (
@@ -83,6 +104,7 @@ const App = () => {
             expenses={expenses}
             handleDelete={handleDelete}
             handleDeleteAll={handleDeleteAll}
+            handleEdit={handleEdit}
           />
         </div>
         <div
@@ -92,7 +114,15 @@ const App = () => {
             marginTop: "1rem",
           }}
         >
-          <p style={{ fontSize: "2rem" }}>합계</p>
+          <p style={{ fontSize: "2rem" }}>
+            합계:
+            <span>
+              {expenses.reduce((acc, cur) => {
+                return (acc += cur.amount);
+              }, 0)}
+              원
+            </span>
+          </p>
         </div>
       </div>
     </main>

@@ -20,7 +20,7 @@ const ExpenseForm = ({
           <input
             type='text'
             className='form-control'
-            id=' charge'
+            id='charge'
             name='charge'
             placeholder='예) 콜라'
             value={charge}
@@ -31,7 +31,7 @@ const ExpenseForm = ({
           <label htmlFor=' amount'>비용</label>
           <input
             type='number'
-            className=' form-control'
+            className='form-control'
             id='amount'
             name='amount'
             placeholder='예) 100'
